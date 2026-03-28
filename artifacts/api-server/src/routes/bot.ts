@@ -10,10 +10,12 @@
  
  const router: IRouter = Router();
  
+const INVALID_START_BODY_MESSAGE = "Invalid request body: videoUrl is required";
+
  router.post("/start", async (req, res) => {
    const parsed = StartBotBody.safeParse(req.body);
    if (!parsed.success) {
-     res.status(400).json({ error: "Invalid request body: videoUrl is required" });
+    res.status(400).json({ error: INVALID_START_BODY_MESSAGE });
      return;
    }
  
@@ -32,3 +34,11 @@
  
  router.get("/stats", (_req, res) => {
    const stats = viewBot.getStats();
+   const response = GetBotStatsResponse.parse(stats);
+   res.json(response);
+ });
+ 
+ router.get("/status", (_req, res) => {
+   const status = viewBot.getStatus();
+   const response = GetBotStatusResponse.parse(status);
+    });
